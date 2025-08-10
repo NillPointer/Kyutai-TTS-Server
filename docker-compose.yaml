@@ -1,13 +1,10 @@
-version: '3.8'
-
 services:
   kyutai-tts:
     build:
       context: .
       dockerfile: Dockerfile
-    image: kyutai-tts:latest
-    container_name: kyutai-tts-gpu
-    
+    container_name: kyutai-tts-server
+
     # Enable GPU support
     deploy:
       resources:
@@ -16,44 +13,20 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    
-    # Alternative GPU configuration for older Docker Compose versions
-    # runtime: nvidia
-    # environment:
-    #   - NVIDIA_VISIBLE_DEVICES=all
-    #   - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-    
+
     environment:
-      - CUDA_VISIBLE_DEVICES=0
       - PYTHONUNBUFFERED=1
       - HF_HOME=/app/cache
       - TRANSFORMERS_CACHE=/app/cache
-    
+
     volumes:
-      # Mount local directories for input/output
-      - ./input:/app/input
-      - ./output:/app/output
       # Mount cache directory to persist downloaded models
       - ./cache:/app/cache
-      # Optional: mount scripts directory for custom scripts
-      - ./scripts:/app/custom_scripts
-    
+
     working_dir: /app
-    
-    # Keep container running for interactive use
-    stdin_open: true
-    tty: true
-    
-    # Optional: specific command to run
-    # command: python test_tts.py
-    
-    # Network configuration (if you plan to add web interface later)
+
     ports:
       - "8000:8000"
-    
-    # Memory and CPU limits
-    mem_limit: 16g
-    cpus: 4.0
-    
+
     # Restart policy
     restart: unless-stopped
