@@ -2,12 +2,12 @@
 FROM nvidia/cuda:12.8.1-runtime-ubuntu22.04
 
 # Set environment variables
-ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_DEFAULT_TIMEOUT=100 \
-    HF_HOME=/app/cache
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Set the Hugging Face home directory for better model caching
+ENV HF_HOME=/app/cache
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -26,7 +26,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install the required dependencies
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Copy the entire app directory
 COPY app/ .
