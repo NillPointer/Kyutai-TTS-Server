@@ -22,20 +22,17 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy requirements first for better caching
+# Copy the requirements file
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install -r requirements.txt
+# Install the required dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
+# Copy the entire app directory
+COPY app/ .
 
-# Create directories for cache 
-RUN mkdir -p /app/cache 
-
-# Expose port
+# Expose the port the app runs on
 EXPOSE 8000
 
 # Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python3", "server.py", "--host", "0.0.0.0", "--port", "8000"]

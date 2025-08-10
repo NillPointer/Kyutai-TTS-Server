@@ -1,0 +1,93 @@
+# Kyutai TTS Server
+
+Kyutai TTS Server is an OpenAI-compatible Text-to-Speech (TTS) API server built with FastAPI. It provides a simple interface for generating speech from text using state-of-the-art TTS models.
+
+## Features
+
+- OpenAI-compatible API for text-to-speech generation
+- Supports multiple audio formats (WAV, MP3, FLAC, OGG)
+- Configurable speech speed
+- Health check endpoint
+- Docker support for easy deployment
+
+## Voice Library
+The Kyutai (voices)[https://huggingface.co/kyutai/tts-voices] will be automatically downloaded, along with the (model)[https://huggingface.co/kyutai/tts-1.6b-en_fr] itself, from huggingface during startup to the cache directory. 
+
+For the API, you can provide the wav file path from this voice library. (for example `expresso/ex03-ex01_happy_001_channel1_334s.wav`).
+
+## Project Structure
+
+```
+Kyutai-TTS-Server/
+├── app/
+│   ├── __init__.py
+│   ├── server.py
+│   ├── config.py
+│   ├── models.py
+│   ├── tts.py
+│   └── utils.py
+├── .gitignore
+├── docker-compose.yaml
+├── Dockerfile
+├── requirements.txt
+└── README.md
+```
+
+## API Endpoints
+
+### Text-to-Speech Generation
+
+- **URL**: `/v1/audio/speech`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "model": "optional-model-name",
+    "input": "Text to convert to speech",
+    "voice": "voice-name",
+    "response_format": "wav|mp3|flac|ogg",
+    "speed": 1.0
+  }
+  ```
+- **Response**: Audio file in the requested format
+
+### Health Check
+
+- **URL**: `/health`
+- **Method**: `GET`
+- **Response**:
+  ```json
+  {
+    "status": "healthy"
+  }
+  ```
+
+## Running the Server
+
+### Using Docker
+
+1. Build the Docker image:
+   ```bash
+   docker build -t kyutai-tts-server .
+   ```
+
+2. Run the Docker container:
+   ```bash
+   docker run -d -p 8000:8000 kyutai-tts-server
+   ```
+
+### Locally
+
+1. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Run the server:
+   ```bash
+   python server.py --host 0.0.0.0 --port 8000 --reload
+   ```
+
+## License
+
+This project is licensed under the MIT License.
