@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import Response
 from models import SpeechRequest, SpeechResponse
-from tts import load_model, generate_audio_bytes, model_loaded
+from tts import load_model, generate_audio_bytes, is_model_loaded
 from utils import convert_audio_format
 from config import logger
 
@@ -78,7 +78,7 @@ async def generate_speech(request: SpeechRequest) -> Response:
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    if not model_loaded:
+    if not is_model_loaded():
         raise HTTPException(status_code=503, detail="Model not loaded")
     return {"status": "healthy"}
 

@@ -14,6 +14,10 @@ from config import logger, DEFAULT_MODEL_PARAMS
 tts_model = None
 model_loaded = False
 
+def is_model_loaded() -> bool:
+    global model_loaded
+    return model_loaded
+
 def load_model():
     """Load the TTS model once at startup"""
     global tts_model, model_loaded
