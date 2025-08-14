@@ -1,6 +1,6 @@
 # app/models.py
 
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 
 class SpeechRequest(BaseModel):
@@ -14,10 +14,14 @@ class SpeechRequest(BaseModel):
         speed: Speed adjustment for the generated speech (default: 1.0)
     """
     model: Optional[str] = ""
-    input: str
-    voice: str
+    input: Optional[str] = ""
+    voice: Optional[str] = ""
     response_format: str = "wav"
     speed: float = 1.0
+
+    # Additional, non OpenAI fields for extra functionality
+    voices: Optional[List[str]] = None
+    inputs: Optional[List[str]] = None
 
 class SpeechResponse(BaseModel):
     """Response model for text-to-speech generation.

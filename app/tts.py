@@ -49,19 +49,32 @@ def generate_audio_bytes(request):
     """Generate audio stream for the given request in WAV format"""
     if not tts_model:
         raise HTTPException(status_code=500, detail="TTS model not loaded")
+    
+    if not request.input and not request.inputs:
+        raise HTTPException(status_code=500, detail="Input not provided")
+    
+    if not request.voice and not request.voices:
+        raise HTTPException(status_code=500, detail="Voice not provided")
 
     try:
-        logger.info(f"Generating audio for: '{request.input[:50]}{'...' if len(request.input) > 50 else ''}'")
+        logger.info(f"Starting audio generation")
+
         # Prepare the script with the input text
-        entries = tts_model.prepare_script([request.input], padding_between=1)
+        inputs = [request.input] if request.input else request.inputs
+        logger.info(f"Generating audio for {inputs[0][:50]}")
+        entries = tts_model.prepare_script(inputs, padding_between=1)
 
         # Get voice path
-        voice_path = tts_model.get_voice_path(request.voice)
-        logger.info(f"Used voice path: {voice_path}")
+        voice_paths = []
+        if request.voice:
+            voice_paths = [tts_model.get_voice_path(request.voice)]
+        else:
+            voice_paths = [tts_model.get_voice_path(voice) for voice in request.voices]
+        logger.info(f"Using {len(voice_paths)} voices")
 
         # Create condition attributes
         condition_attributes = tts_model.make_condition_attributes(
-            [voice_path], cfg_coef=2.0
+            voice_paths, cfg_coef=2.0
         )
 
         # Generate audio

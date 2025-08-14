@@ -6,7 +6,7 @@ Kyutai TTS Server is an OpenAI-compatible Text-to-Speech (TTS) API server built 
 
 - OpenAI-compatible API for text-to-speech generation
 - Supports multiple audio formats (WAV, MP3, FLAC, OGG)
-- Configurable speech speed
+- Multi-voice and Multi Dialogue generation support
 - Health check endpoint
 - Docker support for easy deployment
 
@@ -44,7 +44,30 @@ Kyutai-TTS-Server/
   {
     "model": "optional-model-name",
     "input": "Text to convert to speech",
-    "voice": "voice-name",
+    "voice": "expresso/ex03-ex01_happy_001_channel1_334s.wav",
+    "response_format": "wav|mp3|flac|ogg",
+    "speed": 1.0
+  }
+  ```
+- **Response**: Audio file in the requested format
+
+### Multi-Voice, Multi-Dialogue Text-to-Speech Generation (extended from OpenAI API)
+
+- **URL**: `/v1/audio/speech`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "model": "optional-model-name",
+    "inputs": [
+      "Hey there, I'm speaker A",
+      "And I'm speaker B!",
+      "We are having a dialogue"
+    ],
+    "voices": [
+      "expresso/ex03-ex01_happy_001_channel1_334s.wav",
+      "expresso/ex04-ex02_sarcastic_001_channel2_466s.wav"
+    ]
     "response_format": "wav|mp3|flac|ogg",
     "speed": 1.0
   }
